@@ -1,23 +1,45 @@
-import { Formik, Field, Form } from "formik";
+import { Formik, } from "formik";
+import * as Yup from 'yup';
+import { Input, Phonebook } from "./ContactForm.styled";
+import { nanoid } from 'nanoid';
 
-export const ContactForm = ({ good, neutral, bad, total, positivePercentage }) => {
+const schema = Yup.object().shape({
+  name: Yup.string().min(1, 'Too Short!').required('Required'),
+  number: Yup.number()
+    .positive('Must be >0')
+    .min(7, 'Not enough numbers!')
+    .required('Required'),
+  
+});
+
+export const ContactForm = ({ options, onAddContact}) => {
     // if (total === 0) {
     //   return <NotificationMessage />;
     // }
   
     return (
         <Formik
-        initialValues={{ name: "", email: "" }}
-        onSubmit={async (values) => {
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          alert(JSON.stringify(values, null, 2));
+
+        initialValues={{ 
+          name: "", 
+          number: "" 
+        }}
+
+        validationSchema={schema}
+        onSubmit={(values, actions) => {
+          onAddContact({ id: nanoid(), ...values });
+          actions.resetForm();
         }}
       >
-        <Form>
-          <Field name="name" type="text" />
-          <Field name="email" type="email" />
-          <button type="submit">Submit</button>
-        </Form>
+        <Phonebook>
+          <label>Name
+          <Input name="name" type="text" />
+          </label>
+          <label>Number
+          <Input name="number" type="tel" />
+          </label>
+          <button type="submit">Add number</button>
+        </Phonebook>
       </Formik>
     )
 }
