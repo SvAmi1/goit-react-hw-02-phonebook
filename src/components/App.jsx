@@ -4,6 +4,7 @@ import { Layout } from "./Layout";
 import { GlobalStyles } from "./GlobalStyles";
 import { ContactList } from "./ContactList/ContactList";
 import { nanoid } from 'nanoid';
+import { Filter } from "./Filter/Filter";
 
 export class App extends Component {
   state = {
@@ -45,27 +46,26 @@ export class App extends Component {
     });
   };
 
-  // changeContactFilter = (newName, newNumber) => {
-  //   this.setState(prevState => {
-  //     return {
-  //       contacts: {
-  //         ...prevState.contacts,
-  //         number: newNumber,
-  //       },
-  //     };
-  //   });
-  // };
+  changeContactFilter = newFilter => {
+    this.setState({
+          filter: newFilter,
+        })
+  };
 
   render () {
-    const {contacts} = this.state;
+    const {filter, contacts} = this.state;
+    const filteredContacts = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+
   return (
   <Layout>
   <h1>Phonebook</h1>
   <ContactForm onAddContact={this.addContact} />
 
   <h2>Contacts</h2>
-  {/* <Filter /> */}
-  <ContactList contacts={contacts} name={contacts.name} number={contacts.number} onDelete={this.handleDelete}/>
+  <Filter value={filter} onChange={this.changeContactFilter}/>
+  <ContactList contacts={filteredContacts} name={contacts.name} number={contacts.number} onDelete={this.handleDelete}/>
   <GlobalStyles/>
   </Layout>
   );

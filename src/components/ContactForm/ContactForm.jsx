@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import * as Yup from 'yup';
-import { Error, Input, Phonebook } from "./ContactForm.styled";
+import { Btn, Error, Input, Phonebook } from "./ContactForm.styled";
 import { nanoid } from 'nanoid';
 
 const schema = Yup.object().shape({
@@ -43,7 +43,7 @@ export const ContactForm = ({ onAddContact}) => {
           <Input name="number" type="tel" />
           <Error component="div" name="number" />
           </label>
-          <button type="submit">Add number</button>
+          <Btn type="submit">Add number</Btn>
         </Phonebook>
       </Formik>
     )
