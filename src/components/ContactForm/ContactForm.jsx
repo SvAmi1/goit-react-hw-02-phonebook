@@ -1,22 +1,25 @@
-import { Formik, } from "formik";
+import { Formik } from "formik";
 import * as Yup from 'yup';
-import { Input, Phonebook } from "./ContactForm.styled";
+import { Error, Input, Phonebook } from "./ContactForm.styled";
 import { nanoid } from 'nanoid';
 
 const schema = Yup.object().shape({
-  name: Yup.string().min(1, 'Too Short!').required('Required'),
-  number: Yup.number()
-    .positive('Must be >0')
+  name: Yup.string().matches(
+    /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
+    'Wrong name format'
+  ).min(2, 'Too Short!').required('Required'),
+  number: Yup.string()
+  .matches(
+    /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
+    'Wrong number format'
+  )
     .min(7, 'Not enough numbers!')
     .required('Required'),
   
 });
 
-export const ContactForm = ({ options, onAddContact}) => {
-    // if (total === 0) {
-    //   return <NotificationMessage />;
-    // }
-  
+export const ContactForm = ({ onAddContact}) => {
+    
     return (
         <Formik
 
@@ -34,9 +37,11 @@ export const ContactForm = ({ options, onAddContact}) => {
         <Phonebook>
           <label>Name
           <Input name="name" type="text" />
+          <Error component="div" name="name" />
           </label>
           <label>Number
           <Input name="number" type="tel" />
+          <Error component="div" name="number" />
           </label>
           <button type="submit">Add number</button>
         </Phonebook>
